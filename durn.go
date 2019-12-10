@@ -1,6 +1,7 @@
 package main
 
 import (
+	"durn2/config"
 	"fmt"
 	"log"
 	"net/http"
@@ -24,9 +25,16 @@ func createRouter() (router *mux.Router) {
 }
 
 func createServer(r *mux.Router) (srv *http.Server) {
+	var port string
+	if val, exist := config.Default.Get("WEB_PORT"); exist {
+		port = val
+	} else {
+		log.Fatalf("Unable to retrive SERVER_PORT from default config.")
+	}
+
 	srv = &http.Server {
 		Handler:      r,
-		Addr:         "127.0.0.1:8000",
+		Addr:         fmt.Sprintf("127.0.0.1:%s", port),
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}

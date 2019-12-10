@@ -10,21 +10,36 @@ import (
 
 import "github.com/gorilla/mux"
 
-func main() {
+func setupLog() {
 	log.SetFlags(log.Ldate | log.Ltime | log.Llongfile | log.LUTC)
 	log.SetOutput(os.Stdout)
+}
 
-	router := mux.NewRouter()
+func createRouter() (router *mux.Router) {
+	router = mux.NewRouter()
 
 	router.HandleFunc("/", helloWorld)
 
-	srv := &http.Server{
-		Handler:      router,
+	return // named return
+}
+
+func createServer(r *mux.Router) (srv *http.Server) {
+	srv = &http.Server {
+		Handler:      r,
 		Addr:         "127.0.0.1:8000",
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
 
+	return // named return
+}
+
+func main() {
+	setupLog()
+	r := createRouter()
+	srv := createServer(r)
+
+	log.Printf("Starting web server on %s", srv.Addr)
 	log.Fatal(srv.ListenAndServe())
 }
 

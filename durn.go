@@ -2,6 +2,7 @@ package main
 
 import (
 	"durn2/config"
+	"durn2/middleware"
 	"fmt"
 	"log"
 	"net/http"
@@ -18,6 +19,7 @@ func setupLog() {
 
 func createRouter() (router *mux.Router) {
 	router = mux.NewRouter()
+	router.Use(middleware.Log.Access)
 
 	router.HandleFunc("/", helloWorld)
 
@@ -51,7 +53,6 @@ func main() {
 	log.Fatal(srv.ListenAndServe())
 }
 
-func helloWorld(res http.ResponseWriter, req *http.Request) {
-	log.Println(fmt.Sprintf("%s accessed hello world", req.RemoteAddr))
+func helloWorld(res http.ResponseWriter, _ *http.Request) {
 	_, _ = res.Write([]byte("Hello World"))
 }

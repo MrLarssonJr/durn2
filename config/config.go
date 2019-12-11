@@ -10,6 +10,7 @@ import (
 var Default = func() *Configuration {
 	def := New(nil, map[string]string{
 		"WEB_PORT": "8080",
+		"DEBUG_MODE": "false",
 	})
 
 	/*

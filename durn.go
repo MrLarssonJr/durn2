@@ -7,13 +7,25 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 )
 
 import "github.com/gorilla/mux"
 
 func setupLog() {
-	log.SetFlags(log.Ldate | log.Ltime | log.Llongfile | log.LUTC)
+	log.SetFlags(log.Ldate | log.Ltime | log.LUTC)
+
+	if debugMode, found := config.Default.Get("DEBUG_MODE"); found {
+		if b, err := strconv.ParseBool(debugMode); err != nil {
+			log.Fatalf("Config value DEBUG_MODE not a boolean (%s)", debugMode)
+		} else if b {
+			log.SetFlags(log.Flags() | log.Llongfile)
+		}
+	} else {
+		log.Fatalf("Unable to retrive DEBUG_MODE from default config")
+	}
+
 	log.SetOutput(os.Stdout)
 }
 

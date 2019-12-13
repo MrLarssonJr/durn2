@@ -52,11 +52,11 @@ func createRouter(viewFactory view.Factory) (router *mux.Router) {
 }
 
 func createServer(r *mux.Router) (srv *http.Server) {
-	port := config.Default.GetMust("WEB_PORT")
+	port := config.Default.GetMust("PORT")
 
 	srv = &http.Server {
 		Handler:      r,
-		Addr:         fmt.Sprintf("127.0.0.1:%s", port),
+		Addr:         fmt.Sprintf(":%s", port),
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}

@@ -1,9 +1,11 @@
-name: Go
-on: [push]
+name: Merge to master
+on: 
+  push:
+    branches: master
 jobs:
 
-  build:
-    name: Build
+  test:
+    name: Test
     runs-on: ubuntu-latest
     steps:
 
@@ -24,8 +26,21 @@ jobs:
             dep ensure
         fi
 
-    - name: Build
-      run: go build -v .
-
     - name: Test
       run: go test ./...
+  
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v1
+      
+    - name: Push to dokku
+      uses: vitalyliber/dokku-github-action@v2.0
+      env:
+        PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+        PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
+        HOST: jesperlarsson.me
+        PROJECT: durn

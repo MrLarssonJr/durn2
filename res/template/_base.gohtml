@@ -1,0 +1,31 @@
+{{- /*gotype: durn2/view.View*/ -}}
+<!doctype html>
+<!doctype html>
+<!--suppress HtmlUnknownTarget -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{.GetTitle}}</title>
+    <link rel="stylesheet" href="https://aurora.datasektionen.se/">
+    <link rel="stylesheet" href="/css/_base.css">
+    <script type="text/javascript">
+        window.methone_conf = {
+            system_name: 'DUrn',
+            color_scheme: 'cerise',
+            links: [
+                { str: "Data", href: "https://datasektionen.se" },
+            ]
+        }
+    </script>
+    <script defer src="https://methone.datasektionen.se/bar.js"></script>
+</head>
+<body>
+<div id="methone-container-replace"></div>
+<div class="application">
+    {{template "body" .GetData}}
+</div>
+</body>
+</html>

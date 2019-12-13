@@ -1,4 +1,4 @@
-package middleware
+package test_util
 
 import (
 	"net/http"
@@ -12,15 +12,19 @@ type MockResponseWriter struct {
 	status int
 }
 
-func (m MockResponseWriter) Header() http.Header {
+func (m *MockResponseWriter) GetWrittenText() string {
+	return m.builder.String()
+}
+
+func (m *MockResponseWriter) Header() http.Header {
 	return m.header
 }
 
-func (m MockResponseWriter) Write(p []byte) (int, error) {
+func (m *MockResponseWriter) Write(p []byte) (int, error) {
 	return m.builder.Write(p)
 }
 
-func (m MockResponseWriter) WriteHeader(statusCode int) {
+func (m *MockResponseWriter) WriteHeader(statusCode int) {
 	m.status = statusCode
 }
 

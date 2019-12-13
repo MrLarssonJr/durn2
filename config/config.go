@@ -12,7 +12,7 @@ import (
 // Default is a configuration containing globally useful values.
 var Default = func() *Configuration {
 	def := New(nil, map[string]string{
-		"WEB_PORT": "8080",
+		"PORT": "8080",
 		"DEBUG_MODE": "false",
 		"DEFAULT_SITE_TITLE": "DUrn",
 	})

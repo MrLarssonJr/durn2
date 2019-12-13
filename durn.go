@@ -16,14 +16,12 @@ import "github.com/gorilla/mux"
 func setupLog() {
 	log.SetFlags(log.Ldate | log.Ltime | log.LUTC)
 
-	if debugMode, found := config.Default.Get("DEBUG_MODE"); found {
-		if b, err := strconv.ParseBool(debugMode); err != nil {
-			log.Fatalf("Config value DEBUG_MODE not a boolean (%s)", debugMode)
-		} else if b {
-			log.SetFlags(log.Flags() | log.Llongfile)
-		}
-	} else {
-		log.Fatalf("Unable to retrive DEBUG_MODE from default config")
+	debugMode := config.Default.GetMust("DEBUG_MODE")
+
+	if b, err := strconv.ParseBool(debugMode); err != nil {
+		log.Fatalf("Config value DEBUG_MODE not a boolean (%s)", debugMode)
+	} else if b {
+		log.SetFlags(log.Flags() | log.Llongfile)
 	}
 
 	log.SetOutput(os.Stdout)
@@ -39,12 +37,7 @@ func createRouter() (router *mux.Router) {
 }
 
 func createServer(r *mux.Router) (srv *http.Server) {
-	var port string
-	if val, exist := config.Default.Get("WEB_PORT"); exist {
-		port = val
-	} else {
-		log.Fatalf("Unable to retrive SERVER_PORT from default config.")
-	}
+	port := config.Default.GetMust("WEB_PORT")
 
 	srv = &http.Server {
 		Handler:      r,

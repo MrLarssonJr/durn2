@@ -2,6 +2,7 @@
 package config
 
 import (
+	"log"
 	"os"
 	"strings"
 )
@@ -65,4 +66,17 @@ func (c *Configuration) Get(key string) (string, bool) {
 	}
 
 	return "", false
+}
+
+// GetMust is a helper that wraps Get and calls log.Fatal if the returned err
+// from Get is non-nil. In that case the program will halt execution and a
+// short message will have been logged explaining why. This is intended to aid
+// in mandatory variable initialization.
+func (c *Configuration) GetMust(key string) string {
+	if val, found := c.Get(key); found {
+		return val
+	} else {
+		log.Fatalf("Unable to retrive %s from config in a must context", key)
+		return "" // Unreachable, log.Fatalf will exit program
+	}
 }

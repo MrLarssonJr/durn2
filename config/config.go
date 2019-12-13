@@ -2,8 +2,10 @@
 package config
 
 import (
+	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -12,7 +14,11 @@ var Default = func() *Configuration {
 	def := New(nil, map[string]string{
 		"WEB_PORT": "8080",
 		"DEBUG_MODE": "false",
+		"DEFAULT_SITE_TITLE": "DUrn",
 	})
+
+	def.values["WEB_TEMPLATE_PATH"] = fmt.Sprintf("%s%s%s", "res", string(filepath.Separator), "template")
+	def.values["WEB_STYLE_PATH"] = fmt.Sprintf("%s%s%s", "res", string(filepath.Separator), "style")
 
 	/*
 	 * Expose OS environment variables,

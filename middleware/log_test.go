@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"durn2/test_util"
 	"fmt"
 	"log"
 	"net/http"
@@ -25,7 +26,7 @@ func TestLogAccess(t *testing.T) {
 
 		//Arrange
 		var next http.Handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {})
-		w := NewMockResponseWriter()
+		w := test_util.NewMockResponseWriter()
 		r, err := http.NewRequest("GET", mockPath, nil)
 		if err != nil {
 			t.Fatalf("Couldn't create request: %s", err.Error())
@@ -34,7 +35,7 @@ func TestLogAccess(t *testing.T) {
 
 		//Act
 		h := Log.Access(next)
-		h.ServeHTTP(w, r)
+		h.ServeHTTP(&w, r)
 
 		//Assert
 		actualLog := builder.String()

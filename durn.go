@@ -45,7 +45,7 @@ func createRouter(viewFactory view.Factory) (router *mux.Router) {
 	router.PathPrefix("/css/").
 		Handler(http.StripPrefix("/css/", http.FileServer(http.Dir(stylePath))))
 
-	helloWorld := handler.NewHelloWorld()
+	helloWorld := handler.NewHelloWorld(viewFactory)
 	router.Handle("/", helloWorld)
 
 	return // named return

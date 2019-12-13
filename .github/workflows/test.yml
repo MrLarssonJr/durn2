@@ -1,4 +1,4 @@
-name: Check pull request
+name: Test
 on: pull_request
 jobs:
 

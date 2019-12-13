@@ -2,6 +2,7 @@ package main
 
 import (
 	"durn2/config"
+	"durn2/handler"
 	"durn2/middleware"
 	"fmt"
 	"log"
@@ -31,7 +32,8 @@ func createRouter() (router *mux.Router) {
 	router = mux.NewRouter()
 	router.Use(middleware.Log.Access)
 
-	router.HandleFunc("/", helloWorld)
+	helloWorld := handler.NewHelloWorld()
+	router.Handle("/", helloWorld)
 
 	return // named return
 }
@@ -56,8 +58,4 @@ func main() {
 
 	log.Printf("Starting web server on %s", srv.Addr)
 	log.Fatal(srv.ListenAndServe())
-}
-
-func helloWorld(res http.ResponseWriter, _ *http.Request) {
-	_, _ = res.Write([]byte("Hello World"))
 }

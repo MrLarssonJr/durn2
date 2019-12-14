@@ -16,7 +16,7 @@ import (
 import "github.com/gorilla/mux"
 
 func setupLog() {
-	log.SetFlags(log.Ldate | log.Ltime | log.LUTC)
+	log.SetFlags(log.Ldate | log.Ltime)
 
 	debugMode := config.Default.GetMust("DEBUG_MODE")
 

@@ -12,9 +12,10 @@ import (
 // Default is a configuration containing globally useful values.
 var Default = func() *Configuration {
 	def := New(nil, map[string]string{
-		"PORT": "8080",
-		"DEBUG_MODE": "false",
+		"PORT":               "8080",
+		"DEBUG_MODE":         "false",
 		"DEFAULT_SITE_TITLE": "DUrn",
+		"DATABASE_URL":       "postgres://postgres@localhost/durn?sslmode=disable",
 	})
 
 	def.values["WEB_TEMPLATE_PATH"] = fmt.Sprintf("%s%s%s", "res", string(filepath.Separator), "template")

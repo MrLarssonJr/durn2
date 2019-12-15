@@ -4,8 +4,11 @@ import (
 	"durn2/config"
 	"durn2/handler"
 	"durn2/middleware"
+	"durn2/model"
 	"durn2/view"
 	"fmt"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"log"
 	"net/http"
 	"os"
@@ -29,6 +32,24 @@ func setupLog() {
 	log.SetOutput(os.Stdout)
 }
 
+func setupDB() *gorm.DB {
+	databaseUrl := config.Default.GetMust("DATABASE_URL")
+	db, err := gorm.Open("postgres", databaseUrl)
+	if err != nil {
+		log.Fatalf("Error opening connection to database - %v", err)
+	}
+
+	db.AutoMigrate(
+		&model.Election{},
+		&model.Candidate{},
+		&model.Voter{},
+		&model.Vote{},
+		&model.VoteEntry{},
+	)
+
+	return db
+}
+
 func createViewFactory() view.Factory {
 	return view.NewFactory(
 		config.Default.GetMust("DEFAULT_SITE_TITLE"),
@@ -36,7 +57,7 @@ func createViewFactory() view.Factory {
 	)
 }
 
-func createRouter(viewFactory view.Factory) (router *mux.Router) {
+func createRouter(viewFactory view.Factory, db *gorm.DB) (router *mux.Router) {
 	stylePath := config.Default.GetMust("WEB_STYLE_PATH")
 
 	router = mux.NewRouter()
@@ -54,7 +75,7 @@ func createRouter(viewFactory view.Factory) (router *mux.Router) {
 func createServer(r *mux.Router) (srv *http.Server) {
 	port := config.Default.GetMust("PORT")
 
-	srv = &http.Server {
+	srv = &http.Server{
 		Handler:      r,
 		Addr:         fmt.Sprintf(":%s", port),
 		WriteTimeout: 15 * time.Second,
@@ -66,8 +87,14 @@ func createServer(r *mux.Router) (srv *http.Server) {
 
 func main() {
 	setupLog()
+
+	db := setupDB()
+	defer db.Close()
+
 	vf := createViewFactory()
-	r := createRouter(vf)
+
+	r := createRouter(vf, db)
+
 	srv := createServer(r)
 
 	log.Printf("Starting web server on %s", srv.Addr)
